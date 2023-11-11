@@ -17,7 +17,7 @@ void input() {
     }
     int idx = 1;
     for (auto &&i : arr)
-        MAP[idx++] = i;
+        MAP[i] = idx++;
 }
 
 int main() {
@@ -25,8 +25,8 @@ int main() {
     for (int i = 0; i < q; i++) {
         int a, b, ans = 0;
         cin >> a >> b;
-        for (int j = 1; j <= n; j++)
-            if (a <= MAP[j] && MAP[j] <= b)
+        for (int j = a; j <= b; j++)
+            if (MAP.find(j) != MAP.end())
                 ans++;
         cout << ans << endl;
     }
