@@ -25,16 +25,15 @@ void input() {
 int main() {
     input();
     for (int i = 0; i < q; i++) {
-        int a, b, ans = 0;
+        int a, b;
         cin >> a >> b;
-        // a 이상으로 시작하는 숫자 구하기
-        auto it = arr.lower_bound(a);
-        for (set<int>::iterator iter = it; iter != arr.end(); iter++) {
-            if (*iter > b)
-                break;
-            ans++;
-        }
-        cout << ans << endl;
+        // a 이상으로 시작하는 iter
+        auto it_start = arr.lower_bound(a);
+        if (*it_start != a)
+            it_start++;
+        // b 이하로 끝나는 iter
+        auto it_end = arr.lower_bound(b);
+        cout << MAP[*it_end] - MAP[*it_start] + 1 << endl;
     }
 
     return 0;
