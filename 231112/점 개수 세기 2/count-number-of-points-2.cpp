@@ -39,8 +39,11 @@ int solution(int x1, int y1, int x2, int y2) {
     // y1 이상 y2 이하의 iter 구하기
     for (iter it = s_iter_x; it != arr.end(); it++) {
         auto s_iter_y = IT.lower_bound(y1);
-        if (s_iter_y == IT.end())
+        if (s_iter_y == IT.end()) {
+            if (it == e_iter_x)
+                break;
             continue;
+        }
         auto e_iter_y = --IT.upper_bound(y2);
         cnt += (y2 < *e_iter_y) ? 0 : MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1;
         if (it == e_iter_x)
