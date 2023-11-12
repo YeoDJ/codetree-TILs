@@ -23,10 +23,8 @@ int solution(int a, int b) {
     auto sit = arr.lower_bound(a);
     if (sit == arr.end())
         return 0;
-    auto eit = arr.lower_bound(b);
-    if (eit == arr.end() || *eit > b)
-        eit--;
-    return (eit == arr.end() || *sit > *eit || *eit > b) ? 0 : MAP[*eit] - MAP[*sit] + 1;
+    auto eit = --arr.upper_bound(b);
+    return (eit == arr.end() || *sit > *eit) ? 0 : MAP[*eit] - MAP[*sit] + 1;
 }
 
 int main() {
