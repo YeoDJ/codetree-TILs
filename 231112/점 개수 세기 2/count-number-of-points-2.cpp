@@ -33,14 +33,14 @@ int main() {
         // x1 이상 x2 이하의 iter 구하기
         iter s_iter_x = arr.lower_bound(x1);
         iter e_iter_x = arr.lower_bound(x2);
-        if (e_iter_x == arr.end() || (*e_iter_x).first > x2)
+        if ((*e_iter_x).first > x2)
             e_iter_x--;
 
         // y1 이상 y2 이하의 iter 구하기
         for (iter it = s_iter_x; it != arr.end(); it++) {
             auto s_iter_y = (*it).second.lower_bound(y1);
             auto e_iter_y = (*it).second.lower_bound(y2);
-            if (e_iter_y == (*it).second.end() || *e_iter_y > y2)
+            if (*e_iter_y > y2)
                 e_iter_y--;
             cnt += (s_iter_y != (*it).second.end()) ? MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1 : 0;
             if (it == e_iter_x)
