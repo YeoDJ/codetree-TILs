@@ -33,7 +33,7 @@ int solution(int x1, int y1, int x2, int y2) {
     if (s_iter_x == arr.end())
         return 0;
     iter e_iter_x = --arr.upper_bound(x2);
-    if (e_iter_x == arr.end() || x2 < (*e_iter_x).first && (*e_iter_x).first < (*s_iter_x).first)
+    if (e_iter_x == arr.end() || x2 < (*e_iter_x).first)
         return 0;
 
     // y1 이상 y2 이하의 iter 구하기
@@ -42,7 +42,7 @@ int solution(int x1, int y1, int x2, int y2) {
         if (s_iter_y == IT.end())
             continue;
         auto e_iter_y = --IT.upper_bound(y2);
-        cnt += (e_iter_y == IT.end() || y2 < *e_iter_y && *e_iter_y < *s_iter_y) ? 0 : MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1;
+        cnt += (e_iter_y == IT.end() || y2 < *e_iter_y) ? 0 : MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1;
         if (it == e_iter_x)
             break;
     }
