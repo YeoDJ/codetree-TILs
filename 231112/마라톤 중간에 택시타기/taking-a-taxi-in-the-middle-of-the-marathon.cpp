@@ -20,9 +20,9 @@ void input() {
     // 0: Left, 1: Right
     for (int i = 1; i < n; i++) {
         x_sum[0][i] = x_sum[0][i - 1] + abs(x_arr[i] - x_arr[i - 1]);
-        x_sum[1][n - 1 - i] = x_sum[1][n - 1 - i] + abs(x_arr[n - i] - x_arr[n - 1 - i]);
+        x_sum[1][n - 1 - i] = x_sum[1][n - i] + abs(x_arr[n - i] - x_arr[n - 1 - i]);
         y_sum[0][i] = y_sum[0][i - 1] + abs(y_arr[i] - y_arr[i - 1]);
-        y_sum[1][n - 1 - i] = y_sum[1][n - 1 - i] + abs(y_arr[n - i] - y_arr[n - 1 - i]);
+        y_sum[1][n - 1 - i] = y_sum[1][n - i] + abs(y_arr[n - i] - y_arr[n - 1 - i]);
     }
 }
 
