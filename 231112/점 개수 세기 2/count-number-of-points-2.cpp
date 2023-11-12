@@ -50,7 +50,7 @@ int solution(int x1, int y1, int x2, int y2) {
                 e_iter_y = IT.end();
         } else if (*e_iter_y > y2)
             e_iter_y--;
-        cnt += (s_iter_y != IT.end() && *s_iter_y <= *e_iter_y) ? MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1 : 0;
+        cnt += (*s_iter_y <= *e_iter_y) ? MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1 : 0;
         if (it == e_iter_x)
             break;
     }
