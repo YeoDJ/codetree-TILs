@@ -30,6 +30,9 @@ int solution(int x1, int y1, int x2, int y2) {
     // x1 이상 x2 이하의 iter 구하기
     int cnt = 0;
     iter s_iter_x = arr.lower_bound(x1);
+    if (s_iter_x == arr.end())
+        return 0;
+
     iter e_iter_x = arr.lower_bound(x2);
     if (e_iter_x == arr.end()) {
         e_iter_x--;
@@ -37,12 +40,15 @@ int solution(int x1, int y1, int x2, int y2) {
             e_iter_x = arr.end();
     } else if ((*e_iter_x).first > x2)
         e_iter_x--;
-    if (s_iter_x == arr.end() || (*s_iter_x).first > (*e_iter_x).first)
+    if (e_iter_x != arr.end() && (*s_iter_x).first > (*e_iter_x).first)
         return 0;
 
     // y1 이상 y2 이하의 iter 구하기
     for (iter it = s_iter_x; it != arr.end(); it++) {
         auto s_iter_y = IT.lower_bound(y1);
+        if (s_iter_y == IT.end())
+            continue;
+
         auto e_iter_y = IT.lower_bound(y2);
         if (e_iter_y == IT.end()) {
             e_iter_y--;
@@ -50,7 +56,7 @@ int solution(int x1, int y1, int x2, int y2) {
                 e_iter_y = IT.end();
         } else if (*e_iter_y > y2)
             e_iter_y--;
-        cnt += (s_iter_y != IT.end() && *s_iter_y <= *e_iter_y) ? MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1 : 0;
+        cnt += (e_iter_y != IT.end() && *s_iter_y <= *e_iter_y) ? MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1 : 0;
         if (it == e_iter_x)
             break;
     }
