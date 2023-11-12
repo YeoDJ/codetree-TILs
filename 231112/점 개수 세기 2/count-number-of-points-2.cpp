@@ -45,7 +45,7 @@ int solution(int x1, int y1, int x2, int y2) {
             continue;
         }
         auto e_iter_y = --IT.upper_bound(y2);
-        cnt += (y2 < *e_iter_y) ? 0 : MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1;
+        cnt += (e_iter_y == IT.end() || y2 < *e_iter_y) ? 0 : MAP[(*it).first][*e_iter_y] - MAP[(*it).first][*s_iter_y] + 1;
         if (it == e_iter_x)
             break;
     }
