@@ -24,7 +24,7 @@ int solution(int a, int b) {
     if (sit == arr.end())
         return 0;
     auto eit = --arr.upper_bound(b);
-    return (eit == arr.end() || b < *eit && *eit < *sit) ? 0 : MAP[*eit] - MAP[*sit] + 1;
+    return (eit == arr.end() || b < *eit) ? 0 : MAP[*eit] - MAP[*sit] + 1;
 }
 
 int main() {
