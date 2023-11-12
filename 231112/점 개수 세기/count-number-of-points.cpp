@@ -24,7 +24,7 @@ int solution(int a, int b) {
     if (sit == arr.end())
         return 0;
     auto eit = --arr.upper_bound(b);
-    return (eit == arr.end() || *sit > *eit) ? 0 : MAP[*eit] - MAP[*sit] + 1;
+    return (*sit > *eit) ? 0 : MAP[*eit] - MAP[*sit] + 1;
 }
 
 int main() {
@@ -34,6 +34,5 @@ int main() {
         cin >> a >> b;
         cout << solution(a, b) << endl;
     }
-
     return 0;
 }
