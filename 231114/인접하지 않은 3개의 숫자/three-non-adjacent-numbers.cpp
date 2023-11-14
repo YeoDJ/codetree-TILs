@@ -1,44 +1,28 @@
 #include <algorithm>
 #include <iostream>
 #include <queue>
-#include <unordered_map>
 using namespace std;
 
 int n;
-vector<char> arr;
-// 바위, 가위, 보에 대한 LR 부분합
-vector<int> L[3], R[3];
+vector<int> arr, L, R;
 
 void input() {
     cin >> n;
-    arr = vector<char>(n);
+    arr = L = R = vector<int>(n, 0);
     for (auto &&i : arr)
         cin >> i;
-
-    unordered_map<char, int> tmp;
-    tmp['H'] = 2, tmp['S'] = 0, tmp['P'] = 1;
-    int sum_L[3] = {0}, sum_R[3] = {0};
-    for (int i = 0; i < 3; i++)
-        L[i] = R[i] = vector<int>(n, 0);
-    for (int i = 0; i < n; i++) {
-        sum_L[tmp[arr[i]]]++, sum_R[tmp[arr[n - 1 - i]]]++;
-        for (int j = 0; j < 3; j++)
-            L[j][i] = sum_L[j], R[j][n - 1 - i] = sum_R[j];
+    L[0] = arr[0], R[n - 1] = arr[n - 1];
+    for (int i = 1; i < n; i++) {
+        L[i] = max(L[i - 1], arr[i]);
+        R[n - 1 - i] = max(R[n - i], arr[n - 1 - i]);
     }
 }
 
 int main() {
     input();
     int ans = 0;
-    pair<int, int> c_arr[9] = {
-        {0, 0}, {1, 1}, {2, 2},
-        {0, 1}, {1, 0}, {0, 2},
-        {2, 0}, {1, 2}, {2, 1}
-    };
-
-    for (int i = 0; i < 9; i++)
-        for (int j = 0; j < n - 1; j++)
-            ans = max(ans, L[c_arr[i].first][j] + R[c_arr[i].second][j + 1]);
+    for (int i = 2; i < n - 2; i++)
+        ans = max(ans, L[i - 2] + arr[i] + R[i + 2]);
     cout << ans;
     return 0;
 }
