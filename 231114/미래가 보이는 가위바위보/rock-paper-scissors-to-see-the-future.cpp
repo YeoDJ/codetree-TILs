@@ -35,6 +35,8 @@ int main() {
     for (int i = 0; i < 6; i++)
         for (int j = 0; j < n - 1; j++)
             ans = max(ans, L[c_arr[i].first][j] + R[c_arr[i].second][j + 1]);
+    for (int i = 0; i < 3; i++)
+        ans = max(ans, L[i][n - 1]);
     cout << ans;
     return 0;
 }
