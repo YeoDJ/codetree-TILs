@@ -21,7 +21,7 @@ void input() {
     for (int i = 0; i < 3; i++)
         L[i] = R[i] = vector<int>(n, 0);
     for (int i = 0; i < n; i++) {
-        sum_L[tmp[arr[i]]]++, sum_R[tmp[arr[n - i]]]++;
+        sum_L[tmp[arr[i]]]++, sum_R[tmp[arr[n - 1 - i]]]++;
         for (int j = 0; j < 3; j++)
             L[j][i] = sum_L[j], R[j][n - 1 - i] = sum_R[j];
     }
@@ -35,9 +35,6 @@ int main() {
     for (int i = 0; i < 6; i++)
         for (int j = 0; j < n - 1; j++)
             ans = max(ans, L[c_arr[i].first][j] + R[c_arr[i].second][j + 1]);
-    for (int i = 0; i < 3; i++)
-        ans = max(ans, L[i][n - 1]);
-
     cout << ans;
     return 0;
 }
