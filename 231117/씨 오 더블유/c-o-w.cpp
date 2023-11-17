@@ -31,7 +31,7 @@ int main() {
     unsigned long ans = 0;
     for (int i = 1; i < n - 1; i++)
         if (str[i] == 'O')
-            ans += C[i] * W[i];
+            ans += C[i - 1] * W[i + 1];
     cout << ans;
     return 0;
 }
