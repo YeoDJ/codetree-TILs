@@ -49,7 +49,7 @@ int main() {
         it1--;
         iter it2 = idx_2R.upper_bound(i);
         if (it1 != idx_L.end() && it2 != idx_2R.end() && *it2 - i == 1)
-            ans += distance(idx_R.upper_bound(*it2), idx_R.end()) * (distance(idx_L.begin(), it1) + 1);
+            ans += distance(idx_R.upper_bound(*it2), idx_R.end()) + (distance(idx_L.begin(), it1));
     }
     cout << ans;
     return 0;
