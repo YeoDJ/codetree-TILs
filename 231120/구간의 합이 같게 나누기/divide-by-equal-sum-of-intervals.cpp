@@ -37,7 +37,6 @@ void LR_init() {
 }
 
 int main() {
-    freopen("./input.txt", "r", stdin);
     input();
     if (sum % 4) {
         cout << 0;
