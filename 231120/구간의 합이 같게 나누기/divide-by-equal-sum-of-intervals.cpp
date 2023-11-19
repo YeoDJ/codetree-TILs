@@ -6,7 +6,8 @@
 #define iter set<int>::iterator
 using namespace std;
 
-int n, sum = 0, ans = 0;
+int n, sum = 0;
+long long ans = 0;
 vector<int> arr;
 set<int> idx_L, idx_2L, idx_R, idx_2R;
 
@@ -21,7 +22,7 @@ void input() {
 
 void LR_init() {
     sum /= 4;
-    int sumL = 0, sumR = 0;
+    long long sumL = 0, sumR = 0;
     for (int i = 0; i < n; i++) {
         sumL += arr[i], sumR += arr[j];
         if (i < n - 3 && sumL == sum)
