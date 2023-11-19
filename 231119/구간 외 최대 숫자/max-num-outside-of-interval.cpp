@@ -22,11 +22,10 @@ void input() {
 int main() {
     input();
     for (int t = 0; t < q; t++) {
-        int a, b, ans = 0;
+        int a, b;
         cin >> a >> b;
         a--, b--;
-        ans = max(ans, max(L[a - 1], R[b + 1]));
-        cout << ans << endl;
+        cout << max(L[a - 1], R[b + 1]) << endl;
     }
     return 0;
 }
