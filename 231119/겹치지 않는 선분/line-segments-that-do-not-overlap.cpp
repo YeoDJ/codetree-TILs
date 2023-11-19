@@ -26,7 +26,7 @@ int main() {
     input();
     int ans = 0;
     for (int i = 0; i < n; i++)
-        ans += L[i] != R[i];
+        ans += L[i] == R[i];
     cout << ans;
     return 0;
 }
