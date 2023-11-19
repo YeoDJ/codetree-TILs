@@ -37,6 +37,7 @@ void LR_init() {
 }
 
 int main() {
+    freopen("./input.txt", "r", stdin);
     input();
     if (sum % 4) {
         cout << 0;
@@ -48,9 +49,7 @@ int main() {
     for (auto &&i : idx_2L) {
         iter it1 = idx_L.lower_bound(i);
         it1--;
-        iter it2 = idx_2R.lower_bound(i);
-        if (*it2 == i)
-            it2++;
+        iter it2 = idx_2R.upper_bound(i);
         if (*it2 - i == 1)
             ans += (distance(idx_L.begin(), it1) + 1) * distance(idx_R.upper_bound(*it2), idx_R.end());
     }
