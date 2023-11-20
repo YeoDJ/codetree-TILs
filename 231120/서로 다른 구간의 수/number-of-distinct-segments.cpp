@@ -1,7 +1,7 @@
 #include <iostream>
-#include <vector>
 #include <set>
 #include <unordered_set>
+#include <vector>
 using namespace std;
 
 int n;
@@ -23,16 +23,13 @@ void input() {
 
 int main() {
     input();
-
     // 시작점을 지나친다면 insert, 끝점을 지나친다면 erase
     int ans = 0, a, b, idx;
-    set<int> uset;
+    unordered_set<int> uset;
     for (auto &&i : points) {
         tie(a, b, idx) = i;
-        if (b == 1)
-            uset.insert(idx);
-        else
-            uset.erase(uset.find(idx));
+        if (b == 1) uset.insert(idx);
+        else uset.erase(uset.find(idx));
         ans += uset.empty();
     }
     cout << ans;
