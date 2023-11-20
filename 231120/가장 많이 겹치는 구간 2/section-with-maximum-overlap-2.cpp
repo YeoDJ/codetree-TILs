@@ -1,12 +1,12 @@
+#include <algorithm>
 #include <iostream>
+#include <queue>
 #include <set>
-#include <unordered_set>
-#include <vector>
 using namespace std;
 
 int n;
 vector<pair<int, int>> arr;
-set<tuple<int, int, int>> points;
+set<pair<int, int>> points;
 
 void input() {
     cin >> n;
@@ -14,23 +14,18 @@ void input() {
     for (auto &&i : arr)
         cin >> i.first >> i.second;
 
-    // (시작점, 1, idx), (끝점, -1, idx)
-    for (int i = 0; i < n; i++) {
-        points.insert({arr[i].first, 1, i});
-        points.insert({arr[i].second, -1, i});
+    for (auto &&i : arr) {
+        points.insert({i.first, 1});
+        points.insert({i.second, -1});
     }
 }
 
 int main() {
     input();
-    // 시작점을 지나친다면 insert, 끝점을 지나친다면 erase
-    int ans = 0, a, b, idx;
-    unordered_set<int> uset;
+    int ans = 0, cnt = 0;
     for (auto &&i : points) {
-        tie(a, b, idx) = i;
-        if (b == 1) uset.insert(idx);
-        else uset.erase(uset.find(idx));
-        ans += uset.empty();
+        cnt += i.second;
+        ans = max(ans, cnt);
     }
     cout << ans;
     return 0;
