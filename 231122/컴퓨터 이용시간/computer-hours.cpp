@@ -30,10 +30,13 @@ vector<int> solution() {
     int a, b, idx;
     for (auto &&i : points) {
         tie(a, b, idx) = i;
+        // 사용 시작할 때 -> "대기 중"인 목록에서 제거
         if (b == 1) {
             user_arr[idx] = computers.top();
             computers.pop();
-        } else
+        }
+        // 사용 끝낼 때 -> "대기 중"인 목록에 추가
+        else
             computers.push(user_arr[idx]);
     }
     return user_arr;
