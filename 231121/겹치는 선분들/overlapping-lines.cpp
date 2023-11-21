@@ -30,8 +30,7 @@ void input() {
 
 int main() {
     input();
-    int ans = 0, a, b, idx;
-    int start = 0, end = 0;
+    int ans = 0, start = 0, a, b, idx;
     unordered_set<int> uset;
 
     for (auto &&i : points) {
