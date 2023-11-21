@@ -34,7 +34,7 @@ vector<int> solution() {
             auto it2 = --it1;
             auto it3 = --END;
             it1++;
-            com = (it3 == END || (it2 == END && *it1 > 1)) ? 1 : (it2 != END && *it1 - *it2 > 1) ? *it2 + 1 : *it3 + 1;
+            com = (it1 == END || (it2 == END && *it1 > 1)) ? 1 : (it2 != END && *it1 - *it2 > 1) ? *it2 + 1 : *it3 + 1;
             use_set.insert(com);
             user_arr[idx] = com;
         } else
