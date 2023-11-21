@@ -3,6 +3,7 @@
 #include <queue>
 #include <set>
 #include <unordered_set>
+#define END use_set.end()
 using namespace std;
 
 int n;
@@ -29,22 +30,20 @@ vector<int> solution() {
     for (auto &&i : points) {
         tie(a, b, idx) = i;
         if (b == 1) {
-            auto it = use_set.lower_bound(com);
-            auto it2 = --it;
-            auto it3 = use_set.end();
-            it++, it3--;
-            com = (use_set.empty()) ? 1 : (*it - *it2 > 1) ? *it2 + 1 : *it3 + 1;
+            auto it1 = use_set.lower_bound(com);
+            auto it2 = --it1;
+            auto it3 = END;
+            it1++, it3--;
+            com = (use_set.empty() || (it2 == END && *it1 > 1)) ? 1 : (*it1 - *it2 > 1) ? *it2 + 1 : *it3 + 1;
             use_set.insert(com);
             user_arr[idx] = com;
-        } else {
+        } else
             use_set.erase(user_arr[idx]);
-        }
     }
     return user_arr;
 }
 
 int main() {
-    freopen("./input.txt", "r", stdin);
     input();
     vector<int> user_arr = solution();
     for (auto &&i : user_arr)
