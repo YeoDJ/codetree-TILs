@@ -3,8 +3,6 @@
 #include <queue>
 #include <set>
 #include <unordered_set>
-
-#define iter set<int>::iterator
 #define END use_set.end()
 using namespace std;
 
@@ -32,11 +30,11 @@ vector<int> solution() {
     for (auto &&i : points) {
         tie(a, b, idx) = i;
         if (b == 1) {
-            iter it1 = use_set.find(com);
-            iter it2 = --it1;
-            iter it3 = --END;
+            auto it1 = use_set.find(com);
+            auto it2 = --it1;
+            auto it3 = --END;
             it1++;
-            com = (it3 == END || (it2 == END && *it1 > 1)) ? 1 : (*it1 - *it2 > 1) ? *it2 + 1 : *it3 + 1;
+            com = (it3 == END || (it2 == END && *it1 > 1)) ? 1 : (it2 != END && *it1 - *it2 > 1) ? *it2 + 1 : *it3 + 1;
             use_set.insert(com);
             user_arr[idx] = com;
         } else
