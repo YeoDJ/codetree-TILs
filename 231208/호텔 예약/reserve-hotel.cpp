@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <queue>
 #include <set>
@@ -21,7 +22,7 @@ void input() {
 int main() {
     input();
     unordered_set<int> us;
-    int a, b, idx, cnt = 0;
+    int a, b, idx, ans = 0;
 
     for (auto &&i : arr) {
         tie(a, b, idx) = i;
@@ -29,8 +30,8 @@ int main() {
             us.insert(idx);
         else
             us.erase(idx);
-        cnt += us.empty();
+        ans = max(ans, (int)us.size());
     }
-    cout << cnt;
+    cout << ans;
     return 0;
 }
