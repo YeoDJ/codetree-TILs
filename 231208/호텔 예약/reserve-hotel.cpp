@@ -14,8 +14,8 @@ void input() {
     for (int i = 0; i < n; i++) {
         int a, b;
         cin >> a >> b;
-        arr.insert({a, 1, i});
-        arr.insert({b, -1, i});
+        arr.insert({a, -1, i});
+        arr.insert({b, 1, i});
     }
 }
 
@@ -26,7 +26,7 @@ int main() {
 
     for (auto &&i : arr) {
         tie(a, b, idx) = i;
-        if (b == 1)
+        if (b == -1)
             us.insert(idx);
         else
             us.erase(idx);
