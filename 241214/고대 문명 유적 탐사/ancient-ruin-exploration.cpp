@@ -85,8 +85,8 @@ int main() {
     for (int tc = 0; tc < k; tc++) {
         ans = 0, max_pos.clear();
         for (int i = 0; i < 3; i++) {
-            for (int y = 1; y <= 3; y++) {
-                for (int x = 1; x <= 3; x++) {
+            for (int x = 1; x <= 3; x++) {
+                for (int y = 1; y <= 3; y++) {
                     // 돌리고
                     for (int j = 0; j <= i; j++)
                         rotateMap(true, y, x);
