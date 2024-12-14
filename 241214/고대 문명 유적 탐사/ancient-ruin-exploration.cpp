@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 #include <queue>
 #define fastio ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
