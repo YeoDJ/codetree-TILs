@@ -7,7 +7,7 @@
 using namespace std;
 using pii = pair<int, int>;
 
-int k, m, ans = 0, min_deg = 4;
+int k, m, ans = 0;
 vector<vector<int>> MAP, max_MAP;
 int used[5][5] = {0};
 queue<int> arr;
@@ -30,8 +30,8 @@ void input() {
     }
 }
 
-// 시계방향 90도 돌리기기
-void rotateMap(int ny, int nx) {
+// 시계방향 or 반시계방향 90도 돌리기기
+void rotateMap(bool flag, int ny, int nx) {
     vector<vector<int>> tmp1(3, vector<int>(3, 0));
     for (int y = -1; y <= 1; y++)
         for (int x = -1; x <= 1; x++)
@@ -39,8 +39,12 @@ void rotateMap(int ny, int nx) {
 
     vector<vector<int>> tmp2 = tmp1;
     for (int y = 0; y < 3; y++)
-        for (int x = 0; x < 3; x++)
-            tmp1[x][2 - y] = tmp2[y][x];
+        for (int x = 0; x < 3; x++) {
+            if (flag)
+                tmp1[x][2 - y] = tmp2[y][x];
+            else
+                tmp1[y][x] = tmp2[x][2 - y];
+        }
 
     for (int y = -1; y <= 1; y++)
         for (int x = -1; x <= 1; x++)
@@ -79,40 +83,39 @@ int main() {
     input();
 
     for (int tc = 0; tc < k; tc++) {
-        ans = 0, min_deg = 4, max_pos.clear();
-        for (int y = 1; y <= 3; y++)
-            for (int x = 1; x <= 3; x++)
-                for (int i = 0; i < 4; i++) {
+        ans = 0, max_pos.clear();
+        for (int i = 0; i < 3; i++) {
+            for (int y = 1; y <= 3; y++) {
+                for (int x = 1; x <= 3; x++) {
                     // 돌리고
-                    rotateMap(y, x);
+                    rotateMap(true, y, x);
+                    // 같은 영역의 위치 및 접근 여부 초기 설정
+                    vector<pii> pos;
+                    memset(used, 0, sizeof(used));
 
-                    if (i < 3) {
-                        // 같은 영역의 위치 및 접근 여부 초기 설정
-                        vector<pii> pos;
-                        memset(used, 0, sizeof(used));
-
-                        // bfs로 좌표 하나하나 보면서 같은 번호의 유적 찾기
-                        // 단, 3개 이상인 경우만
-                        for (int ny = 0; ny < 5; ny++)
-                            for (int nx = 0; nx < 5; nx++) {
-                                if (MAP[ny][nx] && !used[ny][nx]) {
-                                    vector<pii> tmp = bfs(ny, nx);
-                                    if (tmp.size() >= 3)
-                                        for (auto &&j : tmp)
-                                            pos.push_back(j);
-                                }
+                    // bfs로 좌표 하나하나 보면서 같은 번호의 유적 찾기
+                    // 단, 3개 이상인 경우만
+                    for (int ny = 0; ny < 5; ny++)
+                        for (int nx = 0; nx < 5; nx++) {
+                            if (MAP[ny][nx] && !used[ny][nx]) {
+                                vector<pii> tmp = bfs(ny, nx);
+                                if (tmp.size() >= 3)
+                                    for (auto &&j : tmp)
+                                        pos.push_back(j);
                             }
-
-                        // 만약 찾은 유적의 개수가 최대 값이라면
-                        // 그 최대값이 될 수 있는 유적의 위치 Update
-                        int sz1 = max_pos.size(), sz2 = pos.size();
-                        if (!pos.empty() && (sz1 < sz2 || (sz1 == sz2 && i < min_deg))) {
-                            max_pos = pos;
-                            max_MAP = MAP;
-                            min_deg = i;
                         }
+
+                    // 만약 찾은 유적의 개수가 최대 값이라면
+                    // 그 최대값이 될 수 있는 유적의 위치 Update
+                    if (max_pos.size() < pos.size()) {
+                        max_pos = pos;
+                        max_MAP = MAP;
                     }
+                    // 되돌리고
+                    rotateMap(false, y, x);
                 }
+            }
+        }
 
         if (max_pos.empty())
             break;
