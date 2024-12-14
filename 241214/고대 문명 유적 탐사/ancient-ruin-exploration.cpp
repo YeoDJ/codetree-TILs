@@ -88,7 +88,8 @@ int main() {
             for (int y = 1; y <= 3; y++) {
                 for (int x = 1; x <= 3; x++) {
                     // 돌리고
-                    rotateMap(true, y, x);
+                    for (int j = 0; j <= i; j++)
+                        rotateMap(true, y, x);
                     // 같은 영역의 위치 및 접근 여부 초기 설정
                     vector<pii> pos;
                     memset(used, 0, sizeof(used));
@@ -112,7 +113,8 @@ int main() {
                         max_MAP = MAP;
                     }
                     // 되돌리고
-                    rotateMap(false, y, x);
+                    for (int j = 0; j <= i; j++)
+                        rotateMap(false, y, x);
                 }
             }
         }
