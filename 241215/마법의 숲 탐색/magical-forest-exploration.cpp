@@ -40,7 +40,7 @@ class Golem {
     }
 
     // 최종 골렘 이동시키기
-    void moveGolem(int y, int x, int &dir, int grav, int idx) {
+    void moveGolem(int y, int x, int &dir, int grav, int idx, bool isSpin) {
         // 옮기기 전 다 0으로 초기화 후
         int ny, nx;
         for (int i = 0; i < 5; i++) {
@@ -58,15 +58,15 @@ class Golem {
         }
 
         // 출구 회전하기(단, 아래로 떨어지는 경우는 제외외)
-        if (grav == 2)
-            return;
-        int next_dir = 2;
-        if (grav == 3)
-            next_dir = (dir == 0) ? 3 : dir - 1;
-        if (grav == 1)
-            next_dir = (dir == 3) ? 0 : dir + 1;
-        swap(MAP[ny + dy[dir]][nx + dx[dir]], MAP[ny + dy[next_dir]][nx + dx[next_dir]]);
-        dir = next_dir;
+        if (isSpin) {
+            int next_dir = 2;
+            if (grav == 3)
+                next_dir = (dir == 0) ? 3 : dir - 1;
+            if (grav == 1)
+                next_dir = (dir == 3) ? 0 : dir + 1;
+            swap(MAP[ny + dy[dir]][nx + dx[dir]], MAP[ny + dy[next_dir]][nx + dx[next_dir]]);
+            dir = next_dir;
+        }
     }
 
   public:
@@ -92,24 +92,24 @@ class Golem {
         // 그럼에도 떨어질 곳이 없다면 끝내기
         while (1) {
             if (isMove(r, c, 2)) {
-                moveGolem(r++, c, dir, 2, idx);
+                moveGolem(r++, c, dir, 2, idx, false);
                 continue;
             }
             if (isMove(r, c, 3)) {
-                moveGolem(r, c--, dir, 3, idx);
+                moveGolem(r, c--, dir, 3, idx, false);
                 if (!isMove(r, c, 2))
-                    moveGolem(r, c++, dir, 1, idx);
+                    moveGolem(r, c++, dir, 1, idx, false);
                 else {
-                    moveGolem(r++, c, dir, 2, idx);
+                    moveGolem(r++, c, dir, 2, idx, true);
                     continue;
                 }
             }
             if (isMove(r, c, 1)) {
-                moveGolem(r, c++, dir, 1, idx);
+                moveGolem(r, c++, dir, 1, idx, false);
                 if (!isMove(r, c, 2))
-                    moveGolem(r, c--, dir, 3, idx);
+                    moveGolem(r, c--, dir, 3, idx, false);
                 else {
-                    moveGolem(r++, c, dir, 2, idx);
+                    moveGolem(r++, c, dir, 2, idx, true);
                     continue;
                 }
             }
