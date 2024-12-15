@@ -136,7 +136,7 @@ class Golem {
                 int ny = cur.first + dy[i];
                 int nx = cur.second + dx[i];
                 if (inRange(ny, nx) && !used[ny][nx] && MAP[ny][nx] > 0 && golem_idx[ny][nx] > 0 &&
-                    (golem_idx[cur.first][cur.second] == golem_idx[ny][nx] || (golem_idx[cur.first][cur.second] != golem_idx[ny][nx] && MAP[cur.first][cur.second] == 2 && MAP[ny][nx] == 1))) {
+                    (golem_idx[cur.first][cur.second] == golem_idx[ny][nx] || (golem_idx[cur.first][cur.second] != golem_idx[ny][nx] && MAP[cur.first][cur.second] == 2))) {
                     used[ny][nx] = true;
                     q.push({ny, nx});
                     ans = max(ans, ny - 2);
@@ -158,7 +158,7 @@ int main() {
         int col, dir;
         cin >> col >> dir;
         pii pos = golem.gravity(col - 1, dir, tc);
-        if (pos.first >= 3)
+        if (pos.first > 3)
             ans += golem.findCol(pos); // 최대 열
         else
             golem = Golem(r, c); // 초기화
