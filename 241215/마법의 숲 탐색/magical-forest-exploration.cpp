@@ -7,7 +7,7 @@ using namespace std;
 using pii = pair<int, int>;
 
 // [MAP 정보] - 0: 빈칸, 1: 길, 2: 출구, 3: 골렘 위치
-// [golem_idx 정보] - 골렘 들어올 때마다 변경경
+// [golem_idx 정보] - 골렘 들어올 때마다 변경
 class Golem {
   public:
     int row, col;
@@ -120,7 +120,7 @@ class Golem {
 
     // 움직일 수 있는 경우의 수
     // 1. 서로 갈은 골렘 idx에서 1 또는 2로 가는 경우
-    // 2. 서로 다른 골렘 idx에서 2->1로 가는 경우
+    // 2. 서로 다른 골렘 idx에서 2->?로 가는 경우
     int findCol(pii pos) {
         int ans = 0;
         vector<vector<bool>> used(row + 3, vector<bool>(col, false));
@@ -158,6 +158,7 @@ int main() {
         int col, dir;
         cin >> col >> dir;
         pii pos = golem.gravity(col - 1, dir, tc);
+        // 중심 좌표의 y 값이 3보다 커야 삐져나오지 않았다고 판단한다.
         if (pos.first > 3)
             ans += golem.findCol(pos); // 최대 열
         else
