@@ -130,21 +130,11 @@ void three_dim_bfs(three_dim spos, three_dim epos) {
                     continue;
 
                 // idx 정보: (현재 면, 다음 면) -> 값: 좌표 값
-                int nextY[5][5] = {
-                    {-1, -1, ny, ny, m - 1 - nx}, 
-                    {-1, -1, ny, ny, nx}, 
-                    {ny, ny, -1, -1, m - 1}, 
-                    {ny, ny, -1, -1, 0}, 
-                    {0, 0, 0, 0, -1}
-                };
-                int nextX[5][5] = {
-                    {-1, -1, m - 1, 0, m - 1}, 
-                    {-1, -1, 0, m - 1, 0}, 
-                    {0, m - 1, -1, -1, x}, 
-                    {m - 1, 0, -1, -1, m - 1 - x}, 
-                    {m - 1 - y, y, x, m - 1 - x, -1}
-                };
+                int nextY[5][5] = {{-1, -1, ny, ny, m - 1 - nx}, {-1, -1, ny, ny, nx}, {ny, ny, -1, -1, m - 1}, {ny, ny, -1, -1, 0}, {0, 0, 0, 0, -1}};
+                int nextX[5][5] = {{-1, -1, m - 1, 0, m - 1}, {-1, -1, 0, m - 1, 0}, {0, m - 1, -1, -1, nx}, {m - 1, 0, -1, -1, m - 1 - nx}, {m - 1 - ny, ny, nx, m - 1 - nx, -1}};
                 ny = nextY[z][nz], nx = nextX[z][nz];
+                if (ny == -1 || nx == -1)
+                    continue;
             }
             if (space[nz][ny][nx] == 0 && !visited[nz][ny][nx]) {
                 visited[nz][ny][nx] = true;
