@@ -209,13 +209,13 @@ int main() {
         three_dim_bfs(start_pos, wall_end);
         two_dim_bfs(bottom_start, end_pos);
 
-        // 벽면 종점까지 거리 + 종점까지 거리
+        // 벽면 종점까지 거리 + 종점까지 거리(단, 종점까지 거리가 0이 아닐 때에만 update)
         int z1, y1, x1, y2, x2;
         tie(z1, y1, x1) = wall_end;
         tie(y2, x2) = end_pos;
 
         int sum = dist1[z1][y1][x1] + dist2[y2][x2] + 1;
-        if (dist2[y2][x2])
+        if (dist2[y2][x2] && sum < ans)
             ans = sum;
     }
 
