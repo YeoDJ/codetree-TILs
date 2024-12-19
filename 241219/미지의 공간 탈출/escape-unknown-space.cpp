@@ -50,9 +50,9 @@ void input() {
     for (int i = 0; i < f; i++) {
         cin >> arr[i].row >> arr[i].col >> arr[i].dir >> arr[i].v;
         set_time[0].push_back(i);
+        int ny = arr[i].row, nx = arr[i].col;
         for (int j = 0; j < n; j++) {
-            int ny = arr[i].row + dy[arr[i].dir];
-            int nx = arr[i].col + dx[arr[i].dir];
+            ny += dy[arr[i].dir], nx += dx[arr[i].dir];
             int nv = arr[i].v * (j + 1);
             if (!inRange(n, ny, nx) || MAP[ny][nx] > 0 || nv >= 5 * m * m + n * n - 2)
                 break;
