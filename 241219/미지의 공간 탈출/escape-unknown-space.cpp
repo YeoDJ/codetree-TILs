@@ -203,10 +203,9 @@ int main() {
         tie(z1, y1, x1) = wall_end;
         tie(y2, x2) = end_pos;
 
-        // int sum = dist1[z1][y1][x1] + dist2[y2][x2] + 1;
-        // if (ans == -1 && sum > ans)
-        //     ans = sum;
-        ans = dist1[z1][y1][x1] + dist2[y2][x2] + 1;
+        int sum = dist1[z1][y1][x1] + dist2[y2][x2] + 1;
+        if (dist2[y2][x2])
+            ans = sum;
     }
 
     cout << ans;
