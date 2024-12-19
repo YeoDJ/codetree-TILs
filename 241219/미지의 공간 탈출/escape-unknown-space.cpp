@@ -31,17 +31,43 @@ bool inRange(int sz, int y, int x) { return 0 <= y && y < sz && 0 <= x && x < sz
 // 입력 & 각 지점의 좌표 구하기기
 void input() {
     cin >> n >> m >> f;
-
-    int ny, nny, nx, nnx;
-    two_dim pos(-1, -1); // 시간의 벽 좌표의 좌상단 좌표
     space = vector<vector<vector<int>>>(5, vector<vector<int>>(m, vector<int>(m, 0)));
     MAP = vector<vector<int>>(n, vector<int>(n, 0));
     arr.resize(f);
 
     // 바닥면에 대한 정보
-    for (int y = 0; y < n; y++) {
-        for (int x = 0; x < n; x++) {
+    for (int y = 0; y < n; y++)
+        for (int x = 0; x < n; x++)
             cin >> MAP[y][x];
+
+    // 벽면에 대한 정보
+    for (int z = 0; z < 5; z++)
+        for (int y = 0; y < m; y++)
+            for (int x = 0; x < m; x++)
+                cin >> space[z][y][x];
+
+    // 확산에 대한 정보(확산 시간대도 추출)
+    for (int i = 0; i < f; i++) {
+        cin >> arr[i].row >> arr[i].col >> arr[i].dir >> arr[i].v;
+        set_time[0].push_back(i);
+        for (int j = 0; j < n; j++) {
+            int ny = arr[i].row + dy[arr[i].dir];
+            int nx = arr[i].col + dx[arr[i].dir];
+            int nv = arr[i].v * (j + 1);
+            if (!inRange(n, ny, nx) || MAP[ny][nx] > 0 || nv >= 5 * m * m + n * n - 2)
+                break;
+            set_time[nv].push_back(i);
+        }
+    }
+}
+
+void findPos() {
+    int ny, nny, nx, nnx;
+    two_dim pos(-1, -1); // 시간의 벽 좌표의 좌상단 좌표
+
+    // 바닥의 시작점과 도착점 구하기
+    for (int y = 0; y < n; y++)
+        for (int x = 0; x < n; x++) {
             if (MAP[y][x] == 0)
                 for (int i = 0; i < 4; i++) {
                     ny = y + dy[i], nx = x + dx[i];
@@ -55,19 +81,17 @@ void input() {
             if (MAP[y][x] == 4)
                 end_pos = make_pair(y, x);
         }
-    }
 
-    // 벽면에 대한 정보
+    // 시작점과 벽 종점 구하기
+    // 벽면의 끝점 구하기 -> x 좌표와 벽의 방향에 따라 바닥면의 좌표 조건을 결정한다.
+    // (바닥면 기준)
+    // 동쪽: y좌표 감소, x좌표 우측 끝
+    // 서쪽: y좌표 증가, x좌표 좌측 끝
+    // 남쪽: x좌표 증가, y좌표 하단 끝
+    // 북쪽: x좌표 감소, y좌표 상단 끝
     for (int z = 0; z < 5; z++)
         for (int y = 0; y < m; y++)
             for (int x = 0; x < m; x++) {
-                cin >> space[z][y][x];
-                // 벽면의 끝점 구하기 -> x 좌표와 벽의 방향에 따라 바닥면의 좌표 조건을 결정한다.
-                // (바닥면 기준)
-                // 동쪽: y좌표 감소, x좌표 우측 끝
-                // 서쪽: y좌표 증가, x좌표 좌측 끝
-                // 남쪽: x좌표 증가, y좌표 하단 끝
-                // 북쪽: x좌표 감소, y좌표 상단 끝
                 int tmpY[5] = {pos.first + m - 1 - x, pos.first + x, pos.first + m - 1, pos.first, -1};
                 int tmpX[5] = {pos.second + m - 1, pos.second, pos.second + x, pos.second + m - 1 - x, -1};
                 ny = tmpY[z], nx = tmpX[z];
@@ -83,20 +107,6 @@ void input() {
                 if (z == 4 && space[z][y][x] == 2)
                     start_pos = make_tuple(z, y, x);
             }
-
-    // 확산에 대한 정보(확산 시간대도 추출)
-    for (int i = 0; i < f; i++) {
-        cin >> arr[i].row >> arr[i].col >> arr[i].dir >> arr[i].v;
-        set_time[0].push_back(i);
-        for (int j = 0; j < n; j++) {
-            int ny = arr[i].row + dy[arr[i].dir];
-            int nx = arr[i].col + dx[arr[i].dir];
-            int nv = arr[i].v * (j + 1);
-            if (!inRange(n, ny, nx) || MAP[ny][nx] > 0 || nv >= 5 * m * m + n * n - 2)
-                break;
-            set_time[nv].push_back(i);
-        }
-    }
 }
 
 // 윗면 -> 벽 출구(윗면과 벽 / 벽과 벽)
@@ -178,6 +188,7 @@ void two_dim_bfs(two_dim spos, two_dim epos) {
 int main() {
     fastio;
     input();
+    findPos();
 
     int ans = -1;
     // 각 지점의 좌표가 제대로 나왔는지 확인
