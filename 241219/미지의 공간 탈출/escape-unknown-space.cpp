@@ -120,6 +120,7 @@ void three_dim_bfs(three_dim spos, three_dim epos) {
         three_dim cur = q.front();
         tie(z, y, x) = cur;
         q.pop();
+
         for (int i = 0; i < 4; i++) {
             int nz = z;
             int ny = y + dy[i];
@@ -159,10 +160,11 @@ void two_dim_bfs(two_dim spos, two_dim epos) {
     while (!q.empty()) {
         two_dim cur = q.front();
         q.pop();
+
         for (int i = 0; i < 4; i++) {
             int ny = cur.first + dy[i];
             int nx = cur.second + dx[i];
-            if (inRange(n, ny, nx) && MAP[ny][nx] == 0 && !visited[ny][nx]) {
+            if (inRange(n, ny, nx) && (MAP[ny][nx] == 0 || MAP[ny][nx] == 4) && !visited[ny][nx]) {
                 visited[ny][nx] = true;
                 dist2[ny][nx] += dist2[cur.first][cur.second] + 1;
                 q.push({ny, nx});
@@ -187,9 +189,9 @@ int main() {
     for (auto &&i : set_time) {
         // 확산하기
         for (auto &&j : i.second) {
-            MAP[arr[i.first].row][arr[i.first].col] = 1;
-            arr[i.first].row += dy[arr[i.first].dir];
-            arr[i.first].col += dx[arr[i.first].dir];
+            MAP[arr[j].row][arr[j].col] = 1;
+            arr[j].row += dy[arr[j].dir];
+            arr[j].col += dx[arr[j].dir];
         }
 
         // 윗면 -> 벽면 -> 종점 bfs 진행
@@ -201,9 +203,10 @@ int main() {
         tie(z1, y1, x1) = wall_end;
         tie(y2, x2) = end_pos;
 
-        int sum = dist1[z1][y1][x1] + dist2[y2][x2] + 1;
-        if (ans == -1 && sum > i.first)
-            ans = sum;
+        // int sum = dist1[z1][y1][x1] + dist2[y2][x2] + 1;
+        // if (ans == -1 && sum > ans)
+        //     ans = sum;
+        ans = dist1[z1][y1][x1] + dist2[y2][x2] + 1;
     }
 
     cout << ans;
