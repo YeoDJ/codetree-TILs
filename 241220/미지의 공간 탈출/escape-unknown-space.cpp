@@ -228,8 +228,12 @@ int main() {
         int sum = dist2[end_pos.first][end_pos.second];
 
         // 확산 결과 갈 수 없게 되었다면 빠져나오기
-        if (!sum)
+        if (!sum) {
+            // 현재 답이 확산 시간보다 크다면 진행을 못하는 것임
+            if (ans > i.first)
+                ans = -1;
             break;
+        }
         ans = sum;
     }
 
