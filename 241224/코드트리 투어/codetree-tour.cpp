@@ -51,6 +51,7 @@ void input() {
 // 최단거리 구하기(dijkstra)
 void createProduct(int id, int revenue, int dest) {
     vector<int> dist(n, INF);
+    vector<bool> used(n, false);
     priority_queue<pii> pq; // {가중치, 도착지}
 
     // 자기 자신의 가중치는 0
@@ -58,15 +59,17 @@ void createProduct(int id, int revenue, int dest) {
     pq.push({0, s_place});
 
     while (!pq.empty()) {
-        int min_node = pq.top().second;
+        int node = pq.top().second;
         pq.pop();
-        if (min_node == dest)
-            break;
+        if (used[node])
+            continue;
+        used[node] = true;
 
-        // i까지 거리 = 출발지에서 min_node까지 가는 거리 + min_node에서 i까지 가는 거리
-        for (auto &&i : MAP[min_node]) {
-            int alt = dist[min_node] + i.second;
-            if (i.first != min_node && alt < dist[i.first]) {
+        // i까지 거리 = 출발지에서 node까지 가는 거리 + node에서 i까지 가는 거리
+        // 출발점과 도착점이 다르고 구한 거리가 최소인 경우에 update
+        for (auto &&i : MAP[node]) {
+            int alt = dist[node] + i.second;
+            if (i.first != node && alt < dist[i.first]) {
                 dist[i.first] = alt;
                 pq.push({alt, i.first});
             }
