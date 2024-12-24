@@ -2,7 +2,6 @@
 #include <map>
 #include <queue>
 #include <set>
-#include <tuple>
 #define fastio ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
 
 #define INPUT 100
@@ -54,9 +53,8 @@ void createProduct(int id, int revenue, int dest) {
     while (!pq.empty()) {
         int min_node = pq.top().first;
         pq.pop();
-        if (min_node == dest)
-            break;
 
+        // i까지 거리 = 출발지에서 min_node까지 가는 거리 + min_node에서 i까지 가는 거리
         for (auto &&i : MAP[min_node]) {
             int alt = dist[min_node] + i.second;
             if (alt < dist[i.first]) {
@@ -64,6 +62,9 @@ void createProduct(int id, int revenue, int dest) {
                 pq.push({i.first, alt});
             }
         }
+        // 도착지에 도착했다면 break
+        if (min_node == dest)
+            break;
     }
 
     product tmp = {id, revenue, dest, dist[dest]};
