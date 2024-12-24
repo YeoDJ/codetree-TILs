@@ -101,6 +101,8 @@ void changeDeparture(int start_place) {
     s_place = start_place;
     nyam.clear();
     dijkstra();
+    for (auto &&i : arr)
+        nyam.insert(i.second);
 }
 
 int main() {
