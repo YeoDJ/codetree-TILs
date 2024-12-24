@@ -60,14 +60,11 @@ void createProduct(int id, int revenue, int dest) {
     while (!pq.empty()) {
         int min_node = pq.top().second;
         pq.pop();
-        // 도착지에 도착했다면 break
-        if (min_node == dest)
-            break;
 
         // i까지 거리 = 출발지에서 min_node까지 가는 거리 + min_node에서 i까지 가는 거리
         for (auto &&i : MAP[min_node]) {
             int alt = dist[min_node] + i.second;
-            if (alt < dist[i.first]) {
+            if (i.first != min_node && alt < dist[i.first]) {
                 dist[i.first] = alt;
                 pq.push({alt, i.first});
             }
