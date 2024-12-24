@@ -102,7 +102,7 @@ void changeDeparture(int start_place) {
     nyam.clear();
     dijkstra();
     for (auto &&i : arr)
-        nyam.insert(i.second);
+        createProduct(i.first, i.second.revenue, i.second.dest);
 }
 
 int main() {
