@@ -29,7 +29,7 @@ struct comp {
 };
 
 int n, m, s_place = 0;
-vector<int> dist;
+vector<int> dist;        // 출발지에서 해당 node까지 거리
 map<int, mii> MAP;       // 투어 맵 정보(출발지, {도착지, 가중치})
 map<int, product> arr;   // 현재 존재하는 상품 정보
 set<product, comp> nyam; // 정렬을 위한 상품 정보 변수
@@ -52,7 +52,7 @@ void input() {
 // 최단거리 구하기(dijkstra)
 void dijkstra() {
     dist = vector<int>(n, INF);
-    vector<bool> visited(n, false);
+    vector<bool> visited(n, false);                    // 한 번 방문한 node는 다시 연산하지 않는다.
     priority_queue<pii, vector<pii>, greater<pii>> pq; // {가중치, 도착지}
 
     // 자기 자신의 가중치는 0
