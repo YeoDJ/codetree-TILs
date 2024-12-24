@@ -29,6 +29,7 @@ struct comp {
 };
 
 int n, m, s_place = 0;
+vector<int> dist;
 map<int, mii> MAP;       // 투어 맵 정보(출발지, {도착지, 가중치})
 map<int, product> arr;   // 현재 존재하는 상품 정보
 set<product, comp> nyam; // 정렬을 위한 상품 정보 변수
@@ -49,9 +50,8 @@ void input() {
 }
 
 // 최단거리 구하기(dijkstra)
-void createProduct(int id, int revenue, int dest) {
-    vector<int> dist(n, INF);
-    vector<bool> used(n, false);
+void dijkstra() {
+    dist = vector<int>(n, INF);
     priority_queue<pii> pq; // {가중치, 도착지}
 
     // 자기 자신의 가중치는 0
@@ -61,9 +61,6 @@ void createProduct(int id, int revenue, int dest) {
     while (!pq.empty()) {
         int node = pq.top().second;
         pq.pop();
-        if (used[node])
-            continue;
-        used[node] = true;
 
         // i까지 거리 = 출발지에서 node까지 가는 거리 + node에서 i까지 가는 거리
         // 출발점과 도착점이 다르고 구한 거리가 최소인 경우에 update
@@ -75,7 +72,9 @@ void createProduct(int id, int revenue, int dest) {
             }
         }
     }
+}
 
+void createProduct(int id, int revenue, int dest) {
     product tmp = {id, revenue, dest, dist[dest]};
     arr[id] = tmp;
     nyam.insert(tmp);
@@ -100,10 +99,8 @@ int sellProduct() {
 
 void changeDeparture(int start_place) {
     s_place = start_place;
-    for (auto &&i : arr) {
-        nyam.erase(i.second);
-        createProduct(i.first, i.second.revenue, i.second.dest);
-    }
+    nyam.clear();
+    dijkstra();
 }
 
 int main() {
@@ -117,6 +114,7 @@ int main() {
         switch (cmd) {
         case INPUT:
             input();
+            dijkstra();
             break;
         case CREATE_PRODUCT:
             cin >> id >> revenue >> dest;
