@@ -53,7 +53,7 @@ void input() {
 void dijkstra() {
     dist = vector<int>(n, INF);
     vector<bool> visited(n, false);
-    priority_queue<pii> pq; // {가중치, 도착지}
+    priority_queue<pii, vector<pii>, greater<pii>> pq; // {가중치, 도착지}
 
     // 자기 자신의 가중치는 0
     dist[s_place] = 0;
@@ -70,7 +70,7 @@ void dijkstra() {
         // 출발점과 도착점이 다르고 구한 거리가 최소인 경우에 update
         for (auto &&i : MAP[node]) {
             int alt = dist[node] + i.second;
-            if (i.first != node && !visited[i.first] && alt < dist[i.first]) {
+            if (i.first != node && alt < dist[i.first]) {
                 dist[i.first] = alt;
                 pq.push({alt, i.first});
             }
