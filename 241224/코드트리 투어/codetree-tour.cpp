@@ -52,6 +52,7 @@ void input() {
 // 최단거리 구하기(dijkstra)
 void dijkstra() {
     dist = vector<int>(n, INF);
+    vector<bool> visited(n, false);
     priority_queue<pii> pq; // {가중치, 도착지}
 
     // 자기 자신의 가중치는 0
@@ -61,12 +62,15 @@ void dijkstra() {
     while (!pq.empty()) {
         int node = pq.top().second;
         pq.pop();
+        if (visited[node])
+            continue;
+        visited[node] = true;
 
         // i까지 거리 = 출발지에서 node까지 가는 거리 + node에서 i까지 가는 거리
         // 출발점과 도착점이 다르고 구한 거리가 최소인 경우에 update
         for (auto &&i : MAP[node]) {
             int alt = dist[node] + i.second;
-            if (i.first != node && alt < dist[i.first]) {
+            if (i.first != node && !visited[i.first] && alt < dist[i.first]) {
                 dist[i.first] = alt;
                 pq.push({alt, i.first});
             }
@@ -107,6 +111,7 @@ void changeDeparture(int start_place) {
 
 int main() {
     fastio;
+    freopen("input.txt", "r", stdin);
     int q, cmd;
     int id, revenue, dest, s;
     cin >> q;
