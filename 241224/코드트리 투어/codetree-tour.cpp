@@ -83,13 +83,12 @@ void cancelProduct(int id) {
 
 int sellProduct() {
     int id = -1;
-    for (auto &&i : nyam)
-        if (i.dest != INF && i.revenue - i.cost >= 0) {
-            id = i.id;
-            arr.erase(i.id);
-            nyam.erase(i);
-            break;
-        }
+    auto it = nyam.begin();
+    if ((*it).dest != INF && (*it).revenue - (*it).cost >= 0) {
+        id = (*it).id;
+        arr.erase((*it).id);
+        nyam.erase(it);
+    }
     return id;
 }
 
