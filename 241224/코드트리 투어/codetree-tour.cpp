@@ -41,24 +41,24 @@ void input() {
 
         if (MAP[v].find(u) != MAP[v].end())
             dist = min(dist, MAP[v][u]);
-        MAP[v].insert({u, dist});
+        MAP[v][u] = dist;
         if (MAP[u].find(v) != MAP[u].end())
             dist = min(dist, MAP[u][v]);
-        MAP[u].insert({v, dist});
+        MAP[u][v] = dist;
     }
 }
 
 void createProduct(int id, int revenue, int dest) {
     // 최단거리 구하기(dijkstra)
     vector<int> dist(n, INF);
-    priority_queue<pii> pq; // {도착지, 가중치}
+    priority_queue<pii> pq; // {가중치, 도착지}
 
     // 자기 자신의 가중치는 0
     dist[s_place] = 0;
-    pq.push({s_place, 0});
+    pq.push({0, s_place});
 
     while (!pq.empty()) {
-        int min_node = pq.top().first;
+        int min_node = pq.top().second;
         pq.pop();
         // 도착지에 도착했다면 break
         if (min_node == dest)
@@ -69,7 +69,7 @@ void createProduct(int id, int revenue, int dest) {
             int alt = dist[min_node] + i.second;
             if (alt < dist[i.first]) {
                 dist[i.first] = alt;
-                pq.push({i.first, alt});
+                pq.push({alt, i.first});
             }
         }
     }
