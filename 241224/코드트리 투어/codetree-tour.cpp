@@ -48,8 +48,8 @@ void input() {
     }
 }
 
+// 최단거리 구하기(dijkstra)
 void createProduct(int id, int revenue, int dest) {
-    // 최단거리 구하기(dijkstra)
     vector<int> dist(n, INF);
     priority_queue<pii> pq; // {가중치, 도착지}
 
@@ -60,6 +60,8 @@ void createProduct(int id, int revenue, int dest) {
     while (!pq.empty()) {
         int min_node = pq.top().second;
         pq.pop();
+        if (min_node == dest)
+            break;
 
         // i까지 거리 = 출발지에서 min_node까지 가는 거리 + min_node에서 i까지 가는 거리
         for (auto &&i : MAP[min_node]) {
@@ -81,6 +83,7 @@ void cancelProduct(int id) {
     arr.erase(id);
 }
 
+// 가장 우선순위 상품 팔기(상품 목록이 없거나 목적지까지 갈 수 없거나 손해보는 장사라면 -1 반환)
 int sellProduct() {
     int id = -1;
     auto it = nyam.begin();
