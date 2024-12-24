@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <map>
 #include <queue>
@@ -28,7 +29,7 @@ struct comp {
 };
 
 int n, m, s_place = 0;
-map<int, mii> MAP;  // 투어 맵 정보(출발지, {도착지, 가중치})
+map<int, mii> MAP;       // 투어 맵 정보(출발지, {도착지, 가중치})
 map<int, product> arr;   // 현재 존재하는 상품 정보
 set<product, comp> nyam; // 정렬을 위한 상품 정보 변수
 
@@ -37,7 +38,12 @@ void input() {
     for (int i = 0; i < m; i++) {
         int v, u, dist;
         cin >> v >> u >> dist;
+
+        if (MAP[v].find(u) != MAP[v].end())
+            dist = min(dist, MAP[v][u]);
         MAP[v].insert({u, dist});
+        if (MAP[u].find(v) != MAP[u].end())
+            dist = min(dist, MAP[u][v]);
         MAP[u].insert({v, dist});
     }
 }
