@@ -13,6 +13,7 @@
 #define INF INT32_MAX
 using namespace std;
 using pii = pair<int, int>;
+using mii = map<int, int>;
 
 struct product {
     int id, revenue, dest, cost;
@@ -27,7 +28,7 @@ struct comp {
 };
 
 int n, m, s_place = 0;
-map<int, set<pii>> MAP;  // 투어 맵 정보(출발지, {도착지, 가중치})
+map<int, mii> MAP;  // 투어 맵 정보(출발지, {도착지, 가중치})
 map<int, product> arr;   // 현재 존재하는 상품 정보
 set<product, comp> nyam; // 정렬을 위한 상품 정보 변수
 
@@ -53,6 +54,9 @@ void createProduct(int id, int revenue, int dest) {
     while (!pq.empty()) {
         int min_node = pq.top().first;
         pq.pop();
+        // 도착지에 도착했다면 break
+        if (min_node == dest)
+            break;
 
         // i까지 거리 = 출발지에서 min_node까지 가는 거리 + min_node에서 i까지 가는 거리
         for (auto &&i : MAP[min_node]) {
@@ -62,9 +66,6 @@ void createProduct(int id, int revenue, int dest) {
                 pq.push({i.first, alt});
             }
         }
-        // 도착지에 도착했다면 break
-        if (min_node == dest)
-            break;
     }
 
     product tmp = {id, revenue, dest, dist[dest]};
