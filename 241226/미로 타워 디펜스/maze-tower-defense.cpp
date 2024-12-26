@@ -20,6 +20,7 @@ void input() {
             cin >> MAP[y][x];
 }
 
+// 상하좌우 중 하나로 p만큼 공격
 int attack(int d, int p) {
     int ans = 0;
     int ny = centerPos, nx = centerPos;
@@ -33,13 +34,14 @@ int attack(int d, int p) {
     return ans;
 }
 
-// 빼내는 것과 넣는 것 모두 소용돌이 형태로 탐색한다.
+// 1차원 배열에다 빼내는 것과 다시 MAP에 넣는 것 모두 소용돌이 형태로 탐색한다.
+// 탐색 방법: 가장 바깥쪽 (0, 0)에서 시계방향으로 중앙까지 들어오는 방향
 vector<int> moveMAP() {
     vector<int> ans;
     vector<vector<bool>> visited(n, vector<bool>(n, false));
     int ny = 0, nx = 0, nd = 0;
 
-    // 1차원 배열에 다 빼내고
+    // 1차원 배열에 0 빼고 다 저장한다.
     while (ny != centerPos || nx != centerPos) {
         visited[ny][nx] = true;
         if (MAP[ny][nx]) {
@@ -56,6 +58,7 @@ vector<int> moveMAP() {
     return ans;
 }
 
+// 4개 이상 몬스터가 붙어 있다면 없애기
 vector<int> removeMAP(vector<int> v) {
     int cnt = 1, sz = v.size();
     vector<int> ans;
@@ -111,7 +114,7 @@ void inputMAP(vector<int> v) {
     ny = nx = nd = cnt = 0;
     visited = vector<vector<bool>>(n, vector<bool>(n, false));
 
-    // 다시 MAP에 집어넣기
+    // 다시 MAP에 집어넣기(방향은 moveMAP() 함수에서 한 것과 마찬가지로 진행)
     while (ny != centerPos || nx != centerPos) {
         visited[ny][nx] = true;
         if (cnt >= num)
