@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include <queue>
+#include <set>
 #define fastio ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
 
 using namespace std;
@@ -16,7 +17,7 @@ int dx[] = {0, -1, -1, -1, 0, 1, 1, 1};
 
 pii pacman;                   // 팩맨 현재 좌표
 map<int, monsterInfo> ghost;  // idx별 몹 정보
-map<int, int> MAP[4][4];      // 좌표 별 몹 정보(idx, 방향향)
+set<int> MAP[4][4];           // 좌표 별 몹 정보(idx)
 map<int, int> deadBody[4][4]; // 좌표 별 시체 정보(idx, 시체가 있는 최대 턴)
 vector<pii> path_tmp;         // 백트래킹을 위한 변수
 
@@ -31,7 +32,7 @@ void input() {
         cin >> r >> c >> d;
         monsterInfo tmp = {--r, --c, --d};
         ghost[idx] = tmp;
-        MAP[r][c][idx++] = d;
+        MAP[r][c].insert(idx++);
     }
 }
 
@@ -43,7 +44,7 @@ void moveMonster(int pos, monsterInfo &g) {
         if (inRange(ny, nx) && deadBody[ny][nx].empty() && make_pair(ny, nx) != pacman) {
             MAP[g.row][g.col].erase(pos);
             g.row = ny, g.col = nx;
-            MAP[ny][nx][pos] = g.dir;
+            MAP[ny][nx].insert(pos);
             break;
         }
         g.dir = (g.dir == 7) ? 0 : g.dir + 1;
@@ -106,9 +107,9 @@ int main() {
         // 몬스터 먹기
         for (auto &&j : path)
             for (auto &&k : MAP[j.first][j.second]) {
-                deadBody[j.first][j.second][k.first] = i + 2;
-                ghost.erase(k.first);
-                MAP[j.first][j.second].erase(k.first);
+                deadBody[j.first][j.second][k] = i + 2;
+                MAP[j.first][j.second].erase(k);
+                ghost.erase(k);
             }
 
         // 시체 치우기
@@ -121,7 +122,7 @@ int main() {
         // 몬스터 복제(알 -> MAP으로 옮기기)
         for (auto &&j : egg) {
             ghost[j.first] = j.second;
-            MAP[j.second.row][j.second.col][j.first] = j.second.dir;
+            MAP[j.second.row][j.second.col].insert(j.first);
         }
     }
 
