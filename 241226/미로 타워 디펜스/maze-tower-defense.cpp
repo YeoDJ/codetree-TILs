@@ -72,9 +72,13 @@ vector<int> removeMAP(vector<int> v) {
     }
 
     // 마지막 원소 처리
-    if (sz > 1 && cnt < 4)
-        for (int j = 0; j < cnt; j++)
-            ans.push_back(v[sz - 1]);
+    if (sz > 1) {
+        if (cnt < 4)
+            for (int j = 0; j < cnt; j++)
+                ans.push_back(v[sz - 1]);
+        else
+            sum += cnt * v[sz - 1];
+    }
     return ans;
 }
 
@@ -135,9 +139,8 @@ int main() {
         vector<int> tmp1 = moveMAP();
         vector<int> tmp2;
         while (1) {
-            tmp2 = removeMAP(tmp1);
-
             // 모두 처리했다면 1차원 배열 재구성 후 다시 MAP에 삽입
+            tmp2 = removeMAP(tmp1);
             if (tmp1 == tmp2) {
                 inputMAP(tmp1);
                 break;
