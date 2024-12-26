@@ -72,12 +72,9 @@ vector<int> removeMAP(vector<int> v) {
     }
 
     // 마지막 원소 처리
-    if (sz > 1) {
-        cnt += v[sz - 1] == v[sz - 2];
-        if (cnt < 4)
-            for (int j = 0; j < cnt; j++)
-                ans.push_back(v[sz - 1]);
-    }
+    if (sz > 1 && cnt < 4)
+        for (int j = 0; j < cnt; j++)
+            ans.push_back(v[sz - 1]);
     return ans;
 }
 
@@ -98,10 +95,10 @@ void inputMAP(vector<int> v) {
     }
 
     // 마지막 원소 처리
-    if (sz > 1)
-        cnt += v[0] == v[1];
-    tmp.push_back(cnt);
-    tmp.push_back(v[0]);
+    if (sz > 1 && cnt == 1) {
+        tmp.push_back(cnt);
+        tmp.push_back(v[0]);
+    }
     reverse(tmp.begin(), tmp.end());
 
     // 초기화
