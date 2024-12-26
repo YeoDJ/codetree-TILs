@@ -2,48 +2,27 @@
 #include <queue>
 #include <set>
 #define fastio ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
-#define SZ 4
 
 using namespace std;
 using pii = pair<int, int>;
+
+struct ghostInfo {
+    bool isEgg;
+    int row, col, dir;
+    int die_cnt; // 시체 소멸 몇번째 턴에 발생하는가(0이면 소멸 대상 아님)
+};
 
 int m, t;
 int dy[8] = {-1, -1, 0, 1, 1, 1, 0, -1};
 int dx[8] = {0, -1, -1, -1, 0, 1, 1, 1};
 
-pair<int, int> pacman;
+vector<vector<int>> deadBody(4, vector<int>(4, 0)); // 시체가 몇 개 있는가?
+vector<ghostInfo> ghost;                            // 현재 ghost 정보
+pair<int, int> pacman;                              // 팩맨 위치
 vector<pii> path_tmp;
 set<pii> visited;
 
 bool inRange(int y, int x) { return 0 <= y && y < 4 && 0 <= x && x < 4; }
-
-class ghostInfo {
-  public:
-    bool isEgg = false;
-    int row, col, dir;
-    int die_cnt = 0; // 시체 소멸 몇번째 턴에 발생하는가(0이면 소멸 대상 아님)
-
-  public:
-    ghostInfo(int r, int c, int d) {
-        this->row = r;
-        this->col = c;
-        this->dir = d;
-    };
-
-    void move() {
-        for (int i = 0; i < 8; i++) {
-            int ny = row + dy[dir];
-            int nx = col + dx[dir];
-            if (inRange(ny, nx) && make_pair(ny, nx) != pacman) {
-                row = ny, col = nx;
-                break;
-            }
-            dir = (dir == 7) ? 0 : dir + 1;
-        }
-    }
-};
-
-vector<ghostInfo> ghost;
 
 void input() {
     cin >> m >> t;
@@ -52,8 +31,21 @@ void input() {
     pacman = {r - 1, c - 1};
     for (int i = 0; i < m; i++) {
         cin >> r >> c >> d;
-        ghost.push_back(ghostInfo(r - 1, c - 1, d - 1));
+        ghost.push_back({false, r - 1, c - 1, d - 1, 0});
     }
+}
+
+ghostInfo moveGhost(ghostInfo g) {
+    for (int i = 0; i < 8; i++) {
+        int ny = g.row + dy[g.dir];
+        int nx = g.col + dx[g.dir];
+        if (inRange(ny, nx) && !deadBody[ny][nx] && make_pair(ny, nx) != pacman) {
+            g.row = ny, g.col = nx;
+            break;
+        }
+        g.dir = (g.dir == 7) ? 0 : g.dir + 1;
+    }
+    return g;
 }
 
 void movePacman(pii spos, int lvl, vector<pii> &path, int &cnt) {
@@ -106,7 +98,7 @@ int main() {
             if (j.isEgg)
                 break;
             if (!j.die_cnt)
-                j.move();
+                j = moveGhost(j);
         }
 
         // 팩맨 이동
@@ -121,10 +113,12 @@ int main() {
         for (auto &&j : path)
             for (int k = 0; k < ghost.size(); k++)
                 if (!ghost[k].isEgg && j == make_pair(ghost[k].row, ghost[k].col)) {
-                    if (!ghost[k].die_cnt)
+                    if (!ghost[k].die_cnt) {
                         ghost[k].die_cnt = i + 2;
-                    else if (i > ghost[k].die_cnt) {
+                        deadBody[ghost[k].row][ghost[k].col]++;
+                    } else if (i > ghost[k].die_cnt) {
                         ghost.erase(ghost.begin() + k);
+                        deadBody[ghost[k].row][ghost[k].col]--;
                         k--;
                     }
                 }
