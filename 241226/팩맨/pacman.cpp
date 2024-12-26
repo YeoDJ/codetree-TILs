@@ -57,14 +57,17 @@ void input() {
 
 void movePacman(pii spos, int lvl, vector<pii> &path, int &cnt) {
     if (lvl == 3) {
-        // 알 상태가 아니며
+        // 알 상태가 아니며 왔던 좌표에 다시 돌아왔다면 카운트하지 않는다.
         int tmp = 0;
-        for (auto &&i : path_tmp)
+        for (int i = 0; i < 3; i++) {
+            if ((i == 1 && path_tmp[i] == pacman) || (i == 2 && path_tmp[i] == path_tmp[0]))
+                continue;
             for (auto &&j : ghost) {
                 if (j.isEgg)
                     break;
-                tmp += (j.die_cnt == 0 && i == make_pair(j.row, j.col));
+                tmp += (path_tmp[i] == make_pair(j.row, j.col));
             }
+        }
 
         // 가장 많이 먹을 수 있는 경우라면 path 수정
         if (path.empty() || tmp > cnt) {
