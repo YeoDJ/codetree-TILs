@@ -1,6 +1,5 @@
 #include <iostream>
 #include <queue>
-#include <set>
 #define fastio ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
 #define SZ 4
 
@@ -14,7 +13,6 @@ int dx[8] = {0, -1, -1, -1, 0, 1, 1, 1};
 vector<vector<int>> deadBody(4, vector<int>(4, 0));
 pair<int, int> pacman;
 vector<pii> path_tmp;
-set<pii> visited;
 
 bool inRange(int y, int x) { return 0 <= y && y < 4 && 0 <= x && x < 4; }
 
@@ -80,12 +78,10 @@ void movePacman(pii spos, int lvl, vector<pii> &path, int &cnt) {
         int ny = spos.first + dy[i];
         int nx = spos.second + dx[i];
         pii pos(ny, nx);
-        if (inRange(ny, nx) && visited.find(pos) == visited.end()) {
+        if (inRange(ny, nx)) {
             path_tmp.push_back(pos);
-            visited.insert(pos);
             movePacman(pos, lvl + 1, path, cnt);
             path_tmp.pop_back();
-            visited.erase(pos);
         }
     }
 }
@@ -116,8 +112,7 @@ int main() {
         // 팩맨 이동
         int cnt = 0;
         vector<pii> path;
-        path_tmp.clear(), visited.clear();
-        visited.insert(pacman);
+        path_tmp.clear();
         movePacman(pacman, 0, path, cnt);
         pacman = path[2];
 
