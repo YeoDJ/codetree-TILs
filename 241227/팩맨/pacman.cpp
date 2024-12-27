@@ -95,9 +95,7 @@ int main() {
 
     for (int i = 0; i < t; i++) {
         // 몬스터 복제(알 상태)
-        map<int, monsterInfo> egg;
-        for (auto &&j : monster)
-            egg[idx++] = j.second;
+        map<int, monsterInfo> egg = monster;
 
         // 몬스터 이동
         for (auto &&j : monster)
@@ -117,7 +115,7 @@ int main() {
                 target.push_back(k);
         for (auto &&j : target) {
             monsterInfo tmp = monster[j];
-            deadBody[tmp.row][tmp.col][0].insert(j); /* 이 부분에서 런타임 에러 발생!! */
+            deadBody[tmp.row][tmp.col][0].insert(j);
             MAP[tmp.row][tmp.col].erase(j);
             monster.erase(j);
         }
@@ -134,8 +132,8 @@ int main() {
 
         // 몬스터 복제(알 -> MAP으로 옮기기)
         for (auto &&j : egg) {
-            monster[j.first] = j.second;
-            MAP[j.second.row][j.second.col].insert(j.first);
+            monster[idx++] = j.second;
+            MAP[j.second.row][j.second.col].insert(idx);
         }
     }
 
