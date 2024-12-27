@@ -1,6 +1,4 @@
-#include <algorithm>
 #include <iostream>
-#include <map>
 #include <queue>
 #include <set>
 #define fastio ios::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
@@ -8,81 +6,66 @@
 using namespace std;
 using pii = pair<int, int>;
 
-struct monsterInfo {
-    int row, col, dir;
-};
-
-int m, t, idx = 0;
 int dy[] = {-1, -1, 0, 1, 1, 1, 0, -1};
 int dx[] = {0, -1, -1, -1, 0, 1, 1, 1};
 
-pii pacman;                    // 팩맨 현재 좌표
-map<int, monsterInfo> monster; // idx별 몹 정보
-set<int> MAP[4][4];            // 좌표 별 몹 정보(idx)
-bool deadBody[4][4][3] = {0};  // 좌표 별 시체 존재 여부
-vector<pii> path_tmp;          // 백트래킹을 위한 변수
+int t, cnt;
+pii pacman;
+int monster[4][4][8] = {0};  // 좌표, 방향 별 몬스터 개수
+int deadBody[4][4][3] = {0}; // 좌표 별 시체 개수(마지막 idx는 남은 턴 수)
+vector<pii> path, path_tmp;  // 백트래킹 변수
 
 bool inRange(int y, int x) { return 0 <= y && y < 4 && 0 <= x && x < 4; }
 
 void input() {
+    int m, r, c, d;
     cin >> m >> t;
     cin >> pacman.first >> pacman.second;
     pacman.first--, pacman.second--;
     for (int i = 0; i < m; i++) {
-        int r, c, d;
         cin >> r >> c >> d;
-        monsterInfo tmp = {--r, --c, --d};
-        monster[idx] = tmp;
-        MAP[r][c].insert(idx++);
+        r--, c--, d--;
+        monster[r][c][d]++;
     }
 }
 
-// pos번째 몬스터 이동
-void moveMonster(int pos, monsterInfo &g) {
+void moveMonster(int y, int x, int dir) {
+    int ny = y, nx = x, nd = dir, ans = monster[y][x][dir];
     for (int i = 0; i < 8; i++) {
-        int ny = g.row + dy[g.dir];
-        int nx = g.col + dx[g.dir];
-        bool flag = false;
-        for (int j = 0; j < 3; j++)
-            if (flag = deadBody[ny][nx][j])
-                break;
-
-        if (inRange(ny, nx) && !flag && make_pair(ny, nx) != pacman) {
-            MAP[g.row][g.col].erase(pos);
-            g.row = ny, g.col = nx;
-            MAP[ny][nx].insert(pos);
+        ny = y + dy[nd], nx = x + dx[nd];
+        if (inRange(ny, nx) && !deadBody[ny][nx][0] && !deadBody[ny][nx][1] && make_pair(ny, nx) != pacman)
             break;
-        }
-        g.dir = (g.dir == 7) ? 0 : g.dir + 1;
+        nd = (nd == 7) ? 0 : nd + 1;
     }
+    monster[y][x][dir] = 0;
+    monster[ny][nx][nd] += ans;
 }
 
-// 팩맨 이동
-void movePacman(pii spos, int lvl, vector<pii> &path, int &cnt) {
+void movePacman(pii spos, int lvl) {
     if (lvl == 3) {
-        int tmp = 0;
-        vector<pii> visited;
+        int tmp = 0;      // 경로 상 몬스터 카운트
+        set<pii> visited; // 한 번 들른 좌표는 다시 들르지 않는다.
         for (auto &&i : path_tmp)
-            // 왔던 좌표에 다시 돌아왔다면 카운트하지 않는다.
-            if (find(visited.begin(), visited.end(), i) == visited.end()) {
-                tmp += MAP[i.first][i.second].size();
-                visited.push_back(i);
+            if (visited.find(i) == visited.end()) {
+                for (int j = 0; j < 8; j++)
+                    tmp += monster[i.first][i.second][j];
+                visited.insert(i);
             }
 
-        // 가장 많이 먹을 수 있는 경우라면 path 수정
+        // 가장 많이 먹을 수 있는 경우 update
         if (path.empty() || tmp > cnt) {
-            path = path_tmp;
             cnt = tmp;
+            path = path_tmp;
         }
         return;
     }
 
-    for (int i = 0; i < 7; i += 2) {
+    for (int i = 0; i <= 6; i += 2) {
         int ny = spos.first + dy[i];
         int nx = spos.second + dx[i];
         if (inRange(ny, nx)) {
             path_tmp.push_back({ny, nx});
-            movePacman({ny, nx}, lvl + 1, path, cnt);
+            movePacman({ny, nx}, lvl + 1);
             path_tmp.pop_back();
         }
     }
@@ -93,50 +76,55 @@ int main() {
     freopen("input.txt", "r", stdin);
     input();
 
-    for (int i = 0; i < t; i++) {
+    for (int tc = 0; tc < t; tc++) {
         // 몬스터 복제(알 상태)
-        map<int, monsterInfo> egg = monster;
+        int y, x, d;
+        int egg[4][4][8] = {0};
+        memcpy(egg, monster, sizeof(egg));
 
         // 몬스터 이동
-        for (auto &&j : monster)
-            moveMonster(j.first, j.second);
+        for (y = 0; y < 4; y++)
+            for (x = 0; x < 4; x++)
+                for (d = 0; d < 8; d++)
+                    if (egg[y][x][d])
+                        moveMonster(y, x, d);
 
         // 팩맨 이동
-        int cnt = 0;
-        vector<pii> path;
-        path_tmp.clear();
-        movePacman(pacman, 0, path, cnt);
+        cnt = 0;
+        path.clear(), path_tmp.clear();
+        movePacman(pacman, 0);
         pacman = path[2];
 
-        // 시체 치우기
-        for (int y = 0; y < 4; y++)
-            for (int x = 0; x < 4; x++) {
-                deadBody[y][x][2] = deadBody[y][x][1];
-                deadBody[y][x][1] = deadBody[y][x][0];
+        // 몬스터 먹기
+        for (auto &&i : path) {
+            y = i.first, x = i.second;
+            for (d = 0; d < 8; d++) {
+                deadBody[y][x][2] += monster[y][x][d];
+                monster[y][x][d] = 0;
+            }
+        }
+
+        // 썩어가는 몬스터...
+        for (y = 0; y < 4; y++)
+            for (x = 0; x < 4; x++) {
+                for (d = 0; d < 2; d++)
+                    swap(deadBody[y][x][d], deadBody[y][x][d + 1]);
+                deadBody[y][x][2] = 0;
             }
 
-        // 팩맨 지나간 자리에 몬스터가 있는지 찾기
-        vector<int> target;
-        for (auto &&j : path) {
-            deadBody[j.first][j.second][0] = !MAP[j.first][j.second].empty();
-            for (auto &&k : MAP[j.first][j.second])
-                target.push_back(k);
-        }
-
-        // 몬스터 먹기
-        for (auto &&j : target) {
-            monsterInfo tmp = monster[j];
-            MAP[tmp.row][tmp.col].erase(j);
-            monster.erase(j);
-        }
-
-        // 몬스터 복제(알 -> MAP으로 옮기기)
-        for (auto &&j : egg) {
-            monster[++idx] = j.second;
-            MAP[j.second.row][j.second.col].insert(idx);
-        }
+        // 몬스터 복제
+        for (y = 0; y < 4; y++)
+            for (x = 0; x < 4; x++)
+                for (d = 0; d < 8; d++)
+                    monster[y][x][d] += egg[y][x][d];
     }
 
-    cout << monster.size();
+    // 현재 몬스터 수
+    int ans = 0;
+    for (int y = 0; y < 4; y++)
+        for (int x = 0; x < 4; x++)
+            for (int d = 0; d < 8; d++)
+                ans += monster[y][x][d];
+    cout << ans;
     return 0;
 }
