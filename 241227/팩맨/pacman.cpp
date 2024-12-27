@@ -132,7 +132,7 @@ int main() {
 
         // 몬스터 복제(알 -> MAP으로 옮기기)
         for (auto &&j : egg) {
-            monster[idx++] = j.second;
+            monster[++idx] = j.second;
             MAP[j.second.row][j.second.col].insert(idx);
         }
     }
