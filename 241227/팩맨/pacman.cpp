@@ -122,15 +122,14 @@ int main() {
 
         // 시체 치우기
         for (int y = 0; y < 4; y++)
-            for (int x = 0; x < 4; x++)
-                for (int j = 2; j >= 0; j--) {
+            for (int x = 0; x < 4; x++) {
+                for (int j = 2; j > 0; j--) {
                     set<int> tmp = deadBody[y][x][j];
                     deadBody[y][x][j].clear();
-                    if (j < 2) {
-                        deadBody[y][x][j].clear();
+                    if (j == 1)
                         deadBody[y][x][j + 1] = tmp;
-                    }
                 }
+            }
 
         // 몬스터 복제(알 -> MAP으로 옮기기)
         for (auto &&j : egg) {
