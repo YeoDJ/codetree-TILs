@@ -19,7 +19,7 @@ int dx[] = {0, -1, -1, -1, 0, 1, 1, 1};
 pii pacman;                    // 팩맨 현재 좌표
 map<int, monsterInfo> monster; // idx별 몹 정보
 set<int> MAP[4][4];            // 좌표 별 몹 정보(idx)
-set<int> deadBody[4][4][3];    // 좌표 별 시체 정보(턴 별로 존재하는 시체 idx)
+bool deadBody[4][4][3] = {0};  // 좌표 별 시체 존재 여부
 vector<pii> path_tmp;          // 백트래킹을 위한 변수
 
 bool inRange(int y, int x) { return 0 <= y && y < 4 && 0 <= x && x < 4; }
@@ -44,7 +44,7 @@ void moveMonster(int pos, monsterInfo &g) {
         int nx = g.col + dx[g.dir];
         bool flag = false;
         for (int j = 0; j < 3; j++)
-            if (flag = !deadBody[ny][nx][j].empty())
+            if (flag = deadBody[ny][nx][j])
                 break;
 
         if (inRange(ny, nx) && !flag && make_pair(ny, nx) != pacman) {
@@ -110,22 +110,22 @@ int main() {
 
         // 시체 치우기
         for (int y = 0; y < 4; y++)
-            for (int x = 0; x < 4; x++)
-                for (int j = 2; j >= 0; j--) {
-                    set<int> tmp = deadBody[y][x][j];
-                    deadBody[y][x][j].clear();
-                    if (j < 2)
-                        deadBody[y][x][j + 1] = tmp;
-                }
+            for (int x = 0; x < 4; x++) {
+                deadBody[y][x][2] = deadBody[y][x][1];
+                deadBody[y][x][1] = deadBody[y][x][0];
+            }
 
-        // 몬스터 먹기
+        // 팩맨 지나간 자리에 몬스터가 있는지 찾기
         vector<int> target;
-        for (auto &&j : path)
+        for (auto &&j : path) {
+            deadBody[j.first][j.second][0] = !MAP[j.first][j.second].empty();
             for (auto &&k : MAP[j.first][j.second])
                 target.push_back(k);
+        }
+
+        // 몬스터 먹기
         for (auto &&j : target) {
             monsterInfo tmp = monster[j];
-            deadBody[tmp.row][tmp.col][0].insert(j);
             MAP[tmp.row][tmp.col].erase(j);
             monster.erase(j);
         }
