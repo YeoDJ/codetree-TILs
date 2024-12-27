@@ -34,12 +34,13 @@ void moveMonster(int y, int x, int dir, int nyam) {
     int ny = y, nx = x, nd = dir;
     for (int i = 0; i < 8; i++) {
         ny = y + dy[nd], nx = x + dx[nd];
-        if (inRange(ny, nx) && !deadBody[ny][nx][0] && !deadBody[ny][nx][1] && make_pair(ny, nx) != pacman)
+        if (inRange(ny, nx) && !deadBody[ny][nx][0] && !deadBody[ny][nx][1] && make_pair(ny, nx) != pacman) {
+            monster[y][x][dir] -= nyam;
+            monster[ny][nx][nd] += nyam;
             break;
+        }
         nd = (nd == 7) ? 0 : nd + 1;
     }
-    monster[y][x][dir] -= nyam;
-    monster[ny][nx][nd] += nyam;
 }
 
 void movePacman(pii spos, int lvl) {
