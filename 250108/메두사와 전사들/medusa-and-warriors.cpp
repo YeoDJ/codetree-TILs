@@ -128,7 +128,7 @@ void setSight(pii pos, int dir, bool isKnight) {
         for (int i = 0; i < 3; i++) {
             int ny = cur.first + ((dir < 2) ? dy[dir] : sd[i]);
             int nx = cur.second + ((dir >= 2) ? dx[dir] : sd[i]);
-            if ((!isKnight && inRange({ny, nx})) || (isKnight && inRange({ny, nx}, pos, dir)) && !visited[ny][nx]) {
+            if (((!isKnight && inRange({ny, nx})) || (isKnight && inRange({ny, nx}, pos, dir))) && !visited[ny][nx]) {
                 visited[ny][nx] = 1;
                 medusa_sight[ny][nx] = (!isKnight) ? 1 : -1;
                 q.push({ny, nx});
