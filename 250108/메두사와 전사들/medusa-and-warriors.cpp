@@ -84,7 +84,7 @@ vector<pii> findMedusaPath(pii start, pii end) {
     vector<vector<pii>> parent(n, vector<pii>(n, {-1, -1})); // 부모 노드
     queue<pii> q;                                            // BFS를 위한 큐
     q.push(start);
-    visited[start.first][start.second] = true;
+    visited[start.first][start.second] = 1;
 
     while (!q.empty()) {
         pii cur = q.front();
@@ -120,7 +120,7 @@ void setSight(pii pos, int dir, bool isKnight) {
     visited = vec_init;
     queue<pii> q;
     q.push(pos);
-    visited[pos.first][pos.second] = true;
+    visited[pos.first][pos.second] = 1;
 
     while (!q.empty()) {
         pii cur = q.front();
@@ -155,13 +155,13 @@ void setCoverKnight(int dir) {
         for (int x = medusa.second - 1; x >= 0; x--)
             for (int y = 0; y < n; y++)
                 if (!knight_MAP[y][x].empty() && medusa_sight[y][x] == 1)
-                    setSight({y, x}, dir, false);
+                    setSight({y, x}, dir, true);
         break;
     case 3:
         for (int x = medusa.second + 1; x < n; x++)
             for (int y = 0; y < n; y++)
                 if (!knight_MAP[y][x].empty() && medusa_sight[y][x] == 1)
-                    setSight({y, x}, dir, false);
+                    setSight({y, x}, dir, true);
         break;
     }
 }
@@ -262,6 +262,7 @@ int main() {
             knight.erase(j);
         }
 
+        // 출력 후 돌 상태 원복
         cout << knightDist << " " << turnRock << " " << attackMedusa << "\n";
         for (auto &&i : knight)
             i.second.rock = false;
