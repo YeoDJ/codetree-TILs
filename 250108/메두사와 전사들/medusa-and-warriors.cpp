@@ -29,7 +29,7 @@ vector<vector<set<int>>> knight_MAP; // 전사 위치
 bool inRange(pii p) { return 0 <= p.first && p.first < n && 0 <= p.second && p.second < n; }
 
 // (pos, p, dir) = (현재 탐색 위치, 전사 위치, 방향)
-// 상한선, 하한선 구한 후 범위 내에 있는지 조사하기
+// 상한선, 하한선 구한 후 범위 내에 있는지 조사하기 -> 시야에 가려지는 범위 확인 후 적용
 bool inRange(pii pos, pii p, int dir) {
     if (!inRange(pos))
         return false;
@@ -116,6 +116,7 @@ vector<pii> findMedusaPath(pii start, pii end) {
     return path;
 }
 
+// isKnight가 false라면 pos는 메두사의 위치, true라면 전사의 위치
 void setSight(pii pos, int dir, bool isKnight) {
     visited = vec_init;
     queue<pii> q;
@@ -137,6 +138,7 @@ void setSight(pii pos, int dir, bool isKnight) {
     }
 }
 
+// 메두사와 전사의 상대적인 위치에 따라 탐색하는 범위가 달라짐
 void setCoverKnight(int dir) {
     switch (dir) {
     case 0:
@@ -188,7 +190,8 @@ int main() {
     freopen("input.txt", "r", stdin);
     input();
 
-    vector<pii> path = findMedusaPath(medusa, park); // medusa의 최단거리로 이동하는 경로
+    // medusa의 최단거리로 이동하는 경로
+    vector<pii> path = findMedusaPath(medusa, park);
     if (path.empty()) {
         cout << -1;
         return 0;
@@ -235,13 +238,14 @@ int main() {
         setSight(medusa, maxDir, false);
         setCoverKnight(maxDir);
 
+        // 전사가 메두사의 위치에 도달했을 때 전사하는 전사 수
         vector<int> dieKnight;
         for (auto &&k : knight) {
             // 눈 마주친 전사를 돌로 만들기
             if (medusa_sight[k.second.y][k.second.x] == 1)
                 k.second.rock = true;
-            // 돌이 되지 않은 전사들의 이동 & 공격
             else {
+                // 돌이 되지 않은 전사들의 이동
                 knight_MAP[k.second.y][k.second.x].erase(k.first);
                 pii pos = moveKnight({k.second.y, k.second.x}, true, knightDist);
                 pos = moveKnight(pos, false, knightDist);
