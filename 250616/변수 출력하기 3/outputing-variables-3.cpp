@@ -8,6 +8,6 @@ int main() {
 
     cout<<a<<"->";
     cout<<b<<"->";
-    cout<<c
+    cout<<c;
     return 0;
 }
