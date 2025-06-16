@@ -8,7 +8,7 @@ int main() {
     cin >> N;
     cin >> M;
     
-    while (n != 0) {
+    while (N != 0) {
         cout << N << endl;
         N /= M;
     }
